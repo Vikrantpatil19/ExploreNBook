@@ -6,6 +6,8 @@ import HeroTrain from '../../component/Hero_Section/HeroTrain/HeroTrain'
 import Features from '../../component/Features_Section/Features'
 import Globe from '../../component/Globe_Section/Globe'
 import AdvertiseVdo from '../../component/Advertise_Video/Advertisevideo'
+import Footer from '../../component/Footer/Footer'
+import Statistics from '../../component/Statistics/Statistics'
 
 function Home() {
   return (
@@ -17,6 +19,8 @@ function Home() {
       <Features/>
       <Globe/>
       <AdvertiseVdo/>
+      <Statistics/>
+      <Footer/>
     </div>
   )
 }
