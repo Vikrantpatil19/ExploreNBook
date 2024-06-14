@@ -8,10 +8,12 @@ import Globe from '../../component/Globe_Section/Globe'
 import AdvertiseVdo from '../../component/Advertise_Video/Advertisevideo'
 import Footer from '../../component/Footer/Footer'
 import Statistics from '../../component/Statistics/Statistics'
+import PreLoader from '../../component/PreLoader/PreLoader'
 
 function Home() {
   return (
     <div>
+      <PreLoader/>
       <Navbar/>
       <Carousel/>
       <HeroAero/>
