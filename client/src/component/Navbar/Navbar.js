@@ -1,103 +1,94 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from 'axios';
+import { auth , provider } from "../../views/Login/config";
+import toast from 'react-hot-toast';
 
-function Navbar() {
+const Navbar = () =>  {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/user/logout`,
+      { email: user.email });
+
+      toast.success(response.data.message)
+
+
+      localStorage.clear();
+
+      await auth.signOut();
+
+    } catch (error) {
+      console.error("Error logging out:", error);
+    
+    }
+  };
+
+ 
   return (
     <>
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              color="#000000"
-              fill="none"
-            >
-              <path
-                d="M6.57757 15.4816C5.1628 16.324 1.45336 18.0441 3.71266 20.1966C4.81631 21.248 6.04549 22 7.59087 22H16.4091C17.9545 22 19.1837 21.248 20.2873 20.1966C22.5466 18.0441 18.8372 16.324 17.4224 15.4816C14.1048 13.5061 9.89519 13.5061 6.57757 15.4816Z"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z"
-                stroke="currentColor"
-                stroke-width="1.5"
-              />
-            </svg>
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Contact Us
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Reviews
-                </a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Booking
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      Flights
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      Train
-                    </a>
-                  </li>
-                  
-                </ul>
-              </li>
-              
-            </ul>
-            <form class="d-flex" role="search">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-          </div>
+    <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-info">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">Booking</Link>
+
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/">Home</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/contact">Contact Us</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/review">Reviews</Link>
+            </li>
+
+            <li className="nav-item dropdown">
+              <Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Booking
+              </Link>
+              <ul className="dropdown-menu">
+                <li><Link className="dropdown-item" to="/destination/1">Aeroplane</Link></li>
+                <li><hr className="dropdown-divider" /></li>
+                <li><Link className="dropdown-item" to="/destination/2">Train</Link></li>
+              </ul>
+            </li>
+
+          </ul>
+          {user ? (
+            <div className="d-flex align-items-center  ">
+              <Link to="/dashboard" className='text-decoration-none'>
+                <img src={user.photoURL} alt="Profile" className="rounded-circle me-2" style={{ width: '32px', height: '32px' }} />
+                <span className="text-white me-2">{user.displayName}</span>
+              </Link>
+              <button onClick={handleLogout} className="btn btn-info border text-white" type="button">Logout</button>
+            </div>
+          ) : (
+            <Link to='/login' className="text-decoration-none">
+              <button className="btn btn-info border text-white" type="button">Login</button>
+            </Link>
+          )}
         </div>
-      </nav>
-    </>
-  );
+      </div>
+    </nav>
+  </>
+  )
 }
 
 export default Navbar;
+

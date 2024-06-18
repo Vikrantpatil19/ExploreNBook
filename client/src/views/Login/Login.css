@@ -1,0 +1,27 @@
+/* Custom styles */
+.container {
+    max-width: 1200px;
+  }
+  
+  .btn-outline-info {
+    border-width: 2px;
+  }
+  
+  .border-info {
+    border-color: #17a2b8 !important;
+  }
+  
+  .text-body-emphasis {
+    color: #495057 !important;
+  }
+  
+  .bg-body-tertiary {
+    background-color: #f8f9fa !important;
+  }
+  
+  @media (max-width: 992px) {
+    .img-fluid {
+      max-height: 200px;
+    }
+  }
+  
