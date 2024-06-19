@@ -31,13 +31,13 @@ app.listen(PORT, () => {
 
 // Login API
 
-import user from "./models/user.js";
+import user from "./models/User.js";
 
 app.post("/user", async (req, res) => {
   const { email, userName, userPhoto } = req.body;
 
   try {
-    let existingUser = await user.findOne({ email });
+    let existingUser = await User.findOne({ email });
 
     if (existingUser) {
       existingUser.isLoggedIn = true;
@@ -49,10 +49,11 @@ app.post("/user", async (req, res) => {
         data: existingUser,
       });
     } else {
-      const newUser = await user.create({
+      const newUser = await User.create({
         email,
         userName,
         userPhoto,
+        isLoggedIn: true
       });
 
       res.json({
@@ -73,7 +74,7 @@ app.post("/user", async (req, res) => {
 
 app.get("/user", async (req, res) => {
   try {
-    const users = await user.find();
+    const users = await User.find();
 
     res.json({
       success: true,
@@ -86,6 +87,41 @@ app.get("/user", async (req, res) => {
       success: false,
       message: "Internal server error",
       data: null,
+    });
+  }
+});
+
+//Logout API
+
+app.post("/user/logout" , async(req , res) =>{
+  const {email} = req.body;
+
+  try{
+
+  let user = await User.findOne({ email });
+
+  if(user) {
+    user.isLoggedIn = false;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "user logged out successfully",
+      data: user
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: "user not found",
+      data:null
+    });
+  } 
+  }catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: null
     });
   }
 });
