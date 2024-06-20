@@ -31,7 +31,7 @@ app.listen(PORT, () => {
 
 // Login API
 
-import user from "./models/User.js";
+import User from "./models/User.js";
 
 app.post("/user", async (req, res) => {
   const { email, userName, userPhoto } = req.body;
