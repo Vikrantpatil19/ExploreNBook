@@ -12,7 +12,7 @@ const flightdetail = (props) => {
 
     return (
         <div>
-            flightdetails
+            
           <div className='flight-card'>
             <p>
               <img src={airline1} className='flight-logo' />
