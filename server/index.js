@@ -125,3 +125,59 @@ app.post("/user/logout" , async(req , res) =>{
     });
   }
 });
+
+// Admin Api
+
+import Admin from "./models/Admin.js";
+
+app.post("/admin" , async (req , res) =>{
+  const { email , password } = req.body;
+  const admin = await Admin.create({ email , password});
+
+  res.json({
+    success: true,
+    message: "Your Message has been sent to the admin",
+    data: admin
+  })
+});
+
+//Booking Api
+
+
+app.post("/booking", async (req, res) => {
+  const { name, phone, gender, seat, email } = req.body;
+
+  try {
+    const book = await Booking.create({ name, phone, email });
+    res.json({
+      success: true,
+      message: "Details added Successfully",
+      data: book
+    });
+  } catch (error) {
+    console.error('Error creating booking:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding booking",
+      error: error.message
+    });
+  }
+});
+
+app.get("/booking", async (req, res) => {
+  try {
+    const book = await Booking.find();
+    res.json({
+      success: true,
+      message: "Booking Details fetched successfully",
+      data: book
+    });
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching bookings",
+      error: error.message
+    });
+  }
+});
